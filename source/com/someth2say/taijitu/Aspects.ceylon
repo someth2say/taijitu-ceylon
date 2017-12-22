@@ -44,6 +44,16 @@ shared interface Hasher<T> satisfies Equalizer<T> {
 	shared default Integer hashCode(T t) => if (exists t) then t.hash else 0;
 }
 
-shared interface Comparator<T> satisfies JComparator<T> & Equalizer<T> {}
+shared interface Comparator<T> satisfies JComparator<T> & Equalizer<T> {
+ // Java comparator defines "compare(a,b)".	 
+	shared formal actual Integer compare(T? first, T? second);	
+ // But Ceylon defines no "Comparator" interface, only "Comparable". So we should add the sibiling methods here:
+ //Problem: compare(T,T) is defined in both interfaces but with different results! Should rename...
+	shared formal Comparison compareTo(T first, T second);
+	shared formal Boolean largerThan(T first, T second);
+	shared formal Boolean smallerThan(T first, T second);
+	shared formal Boolean notSmallerThan(T first, T second);
+	shared formal Boolean notLargerThan(T first, T second); 
+}
 
 //shared interface ComparatorHasher<T> satisfies Comparator<T> & Hasher<T> {}

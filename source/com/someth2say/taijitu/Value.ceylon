@@ -56,17 +56,26 @@ shared class DateThreshold<T> extends AbstractConfigurableEqualizer<T,Integer> s
 	equals(Object o) => (this of AbstractConfigurableEqualizer<T,Integer>).equals(o);
 }
 
-shared class JavaComparable<T> extends AbstractConfigurableEqualizer<T> satisfies Comparator<T> & Hasher<T> given T satisfies JComparable<T>{
+shared class JavaComparable<T> extends AbstractConfigurableEqualizer<T> satisfies Comparator<T> & Hasher<T> given T satisfies JComparable<T> {
 	import java.lang {
-		JComparable = Comparable
+		JComparable=Comparable
 	}
 	
 	shared new () extends AbstractConfigurableEqualizer<T>(null) {}
 	
 	shared actual Integer compare(T first, T second) => first.compareTo(second);
 	
-	shared actual Boolean areEquals(T first, T second) => first.equals(second);
+	equals(Object o) => (this of AbstractConfigurableEqualizer<T>).equals(o);
+}
+
+shared class CeylonComparable<T> extends AbstractConfigurableEqualizer<T> satisfies Comparator<T> & Hasher<T> given T satisfies CComparable<T> {
+	import ceylon.language {
+		CComparable=Comparable
+	}
+	
+	shared new () extends AbstractConfigurableEqualizer<T>(null) {}
+	
+	shared actual Integer compare(T first, T second) => switch (first.compare(second)) case (larger) 1 case (smaller) -1 case (equal) 0;
 	
 	equals(Object o) => (this of AbstractConfigurableEqualizer<T>).equals(o);
-	
 }
